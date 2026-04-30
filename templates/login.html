@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Login | SOC Dashboard (Mini SIEM) - Log Analysis & Threat Detection</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}" />
+</head>
+<body class="login-page" data-requires-setup="false">
+  <main class="login-wrapper">
+    <section class="login-card">
+      <h1>SOC Dashboard (Mini SIEM) - Log Analysis & Threat Detection</h1>
+      <p>Complete your profile setup to continue.</p>
+      <!-- UI-only login form: submission redirects without authentication -->
+      <form id="loginForm" action="{{ url_for('index') }}" method="get" class="form-stack">
+        <label for="username">Username</label>
+        <input id="username" name="username" type="text" placeholder="Enter your name" required />
+
+        <label for="dob">Date of Birth</label>
+        <input id="dob" name="dob" type="date" />
+
+        <button type="submit" class="btn-primary">Continue to Dashboard</button>
+      </form>
+    </section>
+  </main>
+  <script src="{{ url_for('static', filename='theme.js') }}"></script>
+</body>
+</html>

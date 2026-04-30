@@ -1,0 +1,45 @@
+{% extends "base.html" %}
+
+{% block title %}Settings | SOC Dashboard{% endblock %}
+
+{% block content %}
+<section class="page-header">
+  <div>
+    <h2>Detection Settings</h2>
+    <p>UI controls for SOC detection behavior (no backend persistence).</p>
+  </div>
+</section>
+
+<section class="panel-card settings-card">
+  <form class="form-stack">
+    <div class="setting-row">
+      <div>
+        <h3>Enable brute-force detection</h3>
+        <p>Monitor repeated failed logins in a short time window.</p>
+      </div>
+      <label class="switch">
+        <input type="checkbox" checked />
+        <span class="slider"></span>
+      </label>
+    </div>
+
+    <div class="setting-row">
+      <div>
+        <h3>Enable blacklist</h3>
+        <p>Generate alerts for known suspicious IP addresses.</p>
+      </div>
+      <label class="switch">
+        <input type="checkbox" checked />
+        <span class="slider"></span>
+      </label>
+    </div>
+
+    <div class="setting-input">
+      <label for="threshold">Failed login threshold</label>
+      <input id="threshold" name="threshold" type="number" min="1" value="5" />
+    </div>
+
+    <button type="button" class="btn-primary">Save Settings</button>
+  </form>
+</section>
+{% endblock %}

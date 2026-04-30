@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>{% block title %}SOC Dashboard{% endblock %}</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}" />
+  {% block head_extra %}{% endblock %}
+</head>
+<body data-requires-setup="true">
+  <aside class="sidebar">
+    <div class="sidebar-brand">SOC Dashboard (Mini SIEM) - Log Analysis & Threat Detection</div>
+    <nav class="sidebar-nav">
+      <a href="{{ url_for('index') }}" class="nav-link {% if active_page == 'dashboard' %}active{% endif %}">Dashboard</a>
+      <a href="{{ url_for('logs') }}" class="nav-link {% if active_page == 'logs' %}active{% endif %}">Logs</a>
+      <a href="{{ url_for('alerts') }}" class="nav-link {% if active_page == 'alerts' %}active{% endif %}">Alerts</a>
+      <a href="{{ url_for('settings') }}" class="nav-link {% if active_page == 'settings' %}active{% endif %}">Settings</a>
+    </nav>
+  </aside>
+
+  <div class="app-shell">
+    <header class="topbar">
+      <h1>SOC Dashboard (Mini SIEM) - Log Analysis & Threat Detection</h1>
+      <div class="nav-actions">
+        <button id="themeToggle" class="icon-btn" type="button" aria-label="Toggle dark and light mode">🌙</button>
+        <div class="user-menu">
+          <button id="userMenuButton" class="icon-btn user-icon-btn" type="button" aria-label="Open user profile">👤</button>
+          <div id="userDropdown" class="user-dropdown hidden">
+            <p class="dropdown-title">User Profile</p>
+            <p><strong>Name:</strong> <span id="userNameDisplay">User</span></p>
+            <p><strong>DOB:</strong> <span id="userDobDisplay">Not set</span></p>
+            <button id="editProfileBtn" class="btn-primary" type="button">Edit Profile</button>
+          </div>
+        </div>
+      </div>
+    </header>
+
+    <main class="page-content">
+      {% block content %}{% endblock %}
+    </main>
+  </div>
+
+  <div id="setupOverlay" class="overlay hidden">
+    <section class="modal-card">
+      <h2>Welcome to SOC Dashboard (Mini SIEM) - Log Analysis & Threat Detection</h2>
+      <p>Set up your profile to continue.</p>
+      <form id="setupForm" class="form-stack">
+        <label for="setupUsername">Username</label>
+        <input id="setupUsername" type="text" placeholder="Enter your name" required />
+        <label for="setupDob">Date of Birth (optional)</label>
+        <input id="setupDob" type="date" />
+        <button type="submit" class="btn-primary">Save & Continue</button>
+      </form>
+    </section>
+  </div>
+
+  <div id="profileOverlay" class="overlay hidden">
+    <section class="modal-card">
+      <h2>Edit Profile</h2>
+      <form id="profileForm" class="form-stack">
+        <label for="profileUsername">Username</label>
+        <input id="profileUsername" type="text" required />
+        <label for="profileDob">Date of Birth (optional)</label>
+        <input id="profileDob" type="date" />
+        <div class="modal-actions">
+          <button id="cancelProfileBtn" type="button" class="btn-secondary">Cancel</button>
+          <button type="submit" class="btn-primary">Save Profile</button>
+        </div>
+      </form>
+    </section>
+  </div>
+
+  <script src="{{ url_for('static', filename='theme.js') }}"></script>
+  {% block scripts %}{% endblock %}
+</body>
+</html>

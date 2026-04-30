@@ -1,0 +1,32 @@
+{% extends "base.html" %}
+
+{% block title %}Logs | SOC Dashboard{% endblock %}
+
+{% block content %}
+<section class="page-header">
+  <div>
+    <h2>Log Events</h2>
+    <p>All parsed log entries from the SOC monitor.</p>
+  </div>
+  <p id="statusMessage" class="status-ok">Loading logs...</p>
+</section>
+
+<section class="panel-card full-width">
+  <h3>Recent Activity</h3>
+  <table>
+    <thead>
+      <tr>
+        <th>Time</th>
+        <th>Event</th>
+        <th>IP</th>
+        <th>Severity</th>
+      </tr>
+    </thead>
+    <tbody id="fullLogsTableBody"></tbody>
+  </table>
+</section>
+{% endblock %}
+
+{% block scripts %}
+<script src="{{ url_for('static', filename='script.js') }}"></script>
+{% endblock %}

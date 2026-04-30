@@ -1,0 +1,33 @@
+{% extends "base.html" %}
+
+{% block title %}Alerts | SOC Dashboard{% endblock %}
+
+{% block content %}
+<section class="page-header">
+  <div>
+    <h2>Security Alerts</h2>
+    <p>Detected events with severity, source IP, and reason.</p>
+  </div>
+  <p id="statusMessage" class="status-ok">Loading alerts...</p>
+</section>
+
+<section class="panel-card full-width">
+  <h3>Detected Alerts</h3>
+  <table>
+    <thead>
+      <tr>
+        <th>Time</th>
+        <th>IP</th>
+        <th>Type</th>
+        <th>Reason</th>
+        <th>Severity</th>
+      </tr>
+    </thead>
+    <tbody id="fullAlertsTableBody"></tbody>
+  </table>
+</section>
+{% endblock %}
+
+{% block scripts %}
+<script src="{{ url_for('static', filename='script.js') }}"></script>
+{% endblock %}

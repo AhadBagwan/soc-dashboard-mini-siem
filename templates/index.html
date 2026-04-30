@@ -1,0 +1,94 @@
+{% extends "base.html" %}
+
+{% block title %}SOC Dashboard{% endblock %}
+
+{% block head_extra %}
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+{% endblock %}
+
+{% block content %}
+<section class="page-header">
+  <div>
+    <h2>Security Overview</h2>
+    <p>Live monitoring for logs, alerts, and attack activity.</p>
+  </div>
+  <p id="statusMessage" class="status-ok">Loading dashboard data...</p>
+</section>
+
+<section class="cards-grid">
+  <article class="metric-card">
+    <span class="metric-icon">📜</span>
+    <h3>Total Logs</h3>
+    <p id="totalLogs">0</p>
+  </article>
+  <article class="metric-card">
+    <span class="metric-icon">🚨</span>
+    <h3>Total Alerts</h3>
+    <p id="totalAlerts">0</p>
+  </article>
+  <article class="metric-card danger-card">
+    <span class="metric-icon">🔥</span>
+    <h3>High Severity Alerts</h3>
+    <p id="severityHigh">0</p>
+  </article>
+  <article class="metric-card">
+    <span class="metric-icon">🎯</span>
+    <h3>Top IP</h3>
+    <p id="topIp">N/A</p>
+  </article>
+</section>
+
+<section class="dashboard-grid">
+  <article class="panel-card">
+    <h3>Attack Distribution</h3>
+    <canvas id="ipChart"></canvas>
+  </article>
+
+  <article class="panel-card">
+    <h3>Top Attacking IPs</h3>
+    <table>
+      <thead>
+        <tr>
+          <th>IP</th>
+          <th>Failed Logins</th>
+        </tr>
+      </thead>
+      <tbody id="topAttackersBody"></tbody>
+    </table>
+  </article>
+
+  <article class="panel-card full-width">
+    <h3>Detected Alerts</h3>
+    <table>
+      <thead>
+        <tr>
+          <th>Time</th>
+          <th>IP</th>
+          <th>Type</th>
+          <th>Reason</th>
+          <th>Severity</th>
+        </tr>
+      </thead>
+      <tbody id="alertsTableBody"></tbody>
+    </table>
+  </article>
+
+  <article class="panel-card full-width">
+    <h3>Recent Logs</h3>
+    <table>
+      <thead>
+        <tr>
+          <th>Time</th>
+          <th>Event</th>
+          <th>IP</th>
+        </tr>
+      </thead>
+      <tbody id="logsTableBody"></tbody>
+    </table>
+  </article>
+</section>
+{% endblock %}
+
+{% block scripts %}
+<script src="{{ url_for('static', filename='script.js') }}"></script>
+{% endblock %}
