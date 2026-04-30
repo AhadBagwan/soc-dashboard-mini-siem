@@ -1,1 +1,30 @@
-[]
+[
+  {
+    "ip": "123.45.67.89",
+    "time": "2026-04-30 09:02:01",
+    "type": "SUSPICIOUS_IP",
+    "reason": "Suspicious IP address detected",
+    "severity": "MEDIUM"
+  },
+  {
+    "ip": "123.45.67.89",
+    "time": "2026-04-30 09:02:01",
+    "type": "NORMAL_ACTIVITY",
+    "reason": "Normal login behavior observed",
+    "severity": "LOW"
+  },
+  {
+    "ip": "10.0.0.5",
+    "time": "2026-04-30 09:01:20",
+    "type": "BRUTE_FORCE",
+    "reason": "Brute-force pattern: 5 failed logins within 2 minutes",
+    "severity": "HIGH"
+  },
+  {
+    "ip": "10.0.0.8",
+    "time": "2026-04-30 09:00:01",
+    "type": "NORMAL_ACTIVITY",
+    "reason": "Normal login behavior observed",
+    "severity": "LOW"
+  }
+]

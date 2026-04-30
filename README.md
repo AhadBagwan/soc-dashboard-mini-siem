@@ -1,61 +1,94 @@
 # SOC Dashboard (Mini SIEM) - Log Analysis & Threat Detection
 
-A Flask-based mini SIEM dashboard for parsing logs, detecting suspicious behavior, and visualizing security alerts in a modern SOC-style interface.
+## 🚀 Overview
 
-## Features
+This project is a simplified Security Operations Center (SOC) Dashboard that simulates how real-world SIEM systems monitor logs and detect suspicious activities.
 
-- Log parsing and analysis pipeline
-- Brute-force detection with sliding-window logic
-- Suspicious IP detection via blacklist
-- Severity-based alerts (LOW / MEDIUM / HIGH)
-- Dashboard cards, tables, and attack chart
-- Dedicated Logs, Alerts, and Settings pages
-- Frontend-only user profile, first-time setup, and theme toggle (dark/light)
+It analyzes log files, detects brute-force attacks using sliding window logic, and generates alerts with severity levels.
 
-## Project Structure
+---
+
+## 🎯 Features
+
+* 🔍 Log Analysis from structured logs
+* 🚨 Brute-force detection (5 failed attempts within 2 minutes)
+* ⚠️ Suspicious IP detection using blacklist
+* 🛡️ Whitelist support to reduce false positives
+* 📊 Severity-based alerts (Low, Medium, High)
+* 🌐 REST API endpoints (`/api/logs`, `/api/alerts`, `/api/summary`)
+* 💾 Optional SQLite-based alert storage
+* 🖥️ Interactive dashboard UI
+
+---
+
+## 🧪 Testing
+
+The system was tested using simulated scenarios:
+
+* Normal traffic (no alerts)
+* Brute-force attack simulation
+* Time-spread attack (no false positives)
+* Whitelisted IP validation
+* API endpoint verification
+
+---
+
+## 🛠️ Tech Stack
+
+* Python
+* Flask
+* JavaScript
+* SQLite
+
+---
+
+## ▶️ How to Run
+
+```bash
+git clone https://github.com/AhadBagwan/soc-dashboard-mini-siem.git
+cd soc-dashboard-mini-siem
+
+pip install -r requirements.txt
+python app.py
+```
+
+Open browser:
+
+http://127.0.0.1:5000
+
+---
+
+## 📂 Project Structure
 
 ```text
 SOC_Dashboard/
 ├── app.py
 ├── analyzer/
-│   ├── alert_store.py
-│   └── log_analyzer.py
-├── data/
-│   ├── alerts.db
-│   └── alerts.json
 ├── logs/
-│   └── sample.log
-├── screenshots/
-│   ├── dashboard.png
-│   └── alerts.png
+├── data/
 ├── static/
 ├── templates/
-├── requirements.txt
-└── .gitignore
 ```
 
-## Local Setup
+---
 
-```powershell
-python -m venv .venv
-.\.venv\Scripts\python -m pip install -r requirements.txt
-.\.venv\Scripts\python app.py
-```
-
-Open: `http://127.0.0.1:5000`
-
-## API Endpoints
-
-- `GET /api/logs`
-- `GET /api/alerts`
-- `GET /api/summary`
-
-## Screenshots
-
-### Dashboard
+## 📸 Screenshots
 
 ![Dashboard](screenshots/dashboard.png)
-
-### Alerts
-
 ![Alerts](screenshots/alerts.png)
+
+---
+
+## 💡 Key Learnings
+
+* Implemented sliding window detection logic
+* Built log-based threat detection system
+* Reduced false positives using whitelist logic
+* Tested system using simulated attack scenarios
+
+---
+
+## 🔗 Author
+
+Ahad Bagwan  
+LinkedIn: https://www.linkedin.com/in/ahad-bagwan-783214328/
