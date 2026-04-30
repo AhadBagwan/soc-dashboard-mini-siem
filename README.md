@@ -100,4 +100,5 @@ SOC_Dashboard/
 ## 🔗 Author
 
 Ahad Bagwan  
-LinkedIn: https://www.linkedin.com/in/ahad-bagwan-783214328/
+LinkedIn: https://www.linkedin.com/in/ahad-bagwan
+
