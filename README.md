@@ -81,7 +81,7 @@ SOC_Dashboard/
 ![Logs View](screenshots/Logs.png)
 
 **Alerts View** - Severity-focused alert panel for quick threat triage.
-![Alerts View](screenshots/alerts.png)
+![Alerts View](<screenshots/alerts.png>)
 
 **Settings View** - Structured controls for detection preferences and UI customization.
 ![Settings View](screenshots/Settings.png)
