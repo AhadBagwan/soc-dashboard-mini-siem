@@ -74,8 +74,17 @@ SOC_Dashboard/
 
 ## 📸 Screenshots
 
-![Dashboard](screenshots/dashboard.png)
-![Alerts](screenshots/alerts.png)
+**Dashboard Overview** - Professional SOC-style summary with live metrics and attack distribution.
+![Dashboard Overview](<screenshots/SOC Dashboard (Mini SIEM).png>)
+
+**Logs View** - Clean event table for fast review of recent security activity.
+![Logs View](screenshots/Logs.png)
+
+**Alerts View** - Severity-focused alert panel for quick threat triage.
+![Alerts View](screenshots/alerts.png)
+
+**Settings View** - Structured controls for detection preferences and UI customization.
+![Settings View](screenshots/Settings.png)
 
 ---
 
