@@ -102,3 +102,6 @@ SOC_Dashboard/
 Ahad Bagwan  
 LinkedIn: [https://www.linkedin.com/in/ahad-bagwan](https://www.linkedin.com/in/ahadbagwan/)
 
+Affan Mansuri
+
+
