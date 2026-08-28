@@ -180,6 +180,19 @@ body {
   min-width: 0;
 }
 
+.full-width-shell {
+  margin-left: 0 !important;
+  width: 100% !important;
+}
+
+.brand-link-title {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  text-decoration: none;
+  color: var(--text-primary);
+}
+
 .topbar {
   height: 64px;
   background-color: var(--surface-color);
@@ -735,7 +748,6 @@ tr:hover td {
 .btn-large {
   padding: 0.9rem 2rem;
   font-size: 1.05rem;
-
 }
 
 .btn-full {

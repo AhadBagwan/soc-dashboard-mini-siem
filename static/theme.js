@@ -73,8 +73,10 @@ function bindGetStartedButtons() {
     const { name, dob } = getProfile();
     const setupNameInput = document.getElementById("setupUsername");
     const setupDobInput = document.getElementById("setupDob");
-    if (setupNameInput && name) {
-      setupNameInput.value = name;
+    
+    // Auto-fill existing name if saved, or default to pre-filled name
+    if (setupNameInput) {
+      setupNameInput.value = name || "Ahad Bagwan";
     }
     if (setupDobInput && dob) {
       setupDobInput.value = dob;
@@ -106,7 +108,7 @@ function bindSetupForm() {
     saveProfile(username, dob);
     renderProfileInfo();
     toggleSetupOverlay(false);
-    // Redirect to enhanced dashboard after entering profile
+    // Redirect cleanly to enhanced dashboard after setup
     window.location.href = "/dashboard";
   });
 }

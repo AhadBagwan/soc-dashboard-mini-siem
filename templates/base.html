@@ -10,7 +10,9 @@
   <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}" />
   {% block head_extra %}{% endblock %}
 </head>
-<body data-requires-setup="false">
+<body class="{% if hide_sidebar or active_page == 'landing' %}landing-page-body{% endif %}" data-requires-setup="false">
+
+  {% if not hide_sidebar and active_page != 'landing' %}
   <aside class="sidebar">
     <div class="sidebar-brand">
       <div class="brand-logo">🛡️</div>
@@ -20,9 +22,6 @@
       </div>
     </div>
     <nav class="sidebar-nav">
-      <a href="{{ url_for('landing') }}" class="nav-link {% if active_page == 'landing' %}active{% endif %}">
-        <span class="nav-icon">🏠</span> Landing Page
-      </a>
       <a href="{{ url_for('index') }}" class="nav-link {% if active_page == 'dashboard' %}active{% endif %}">
         <span class="nav-icon">🖥️</span> Dashboard
       </a>
@@ -44,11 +43,15 @@
       </div>
     </div>
   </aside>
+  {% endif %}
 
-  <div class="app-shell">
+  <div class="app-shell {% if hide_sidebar or active_page == 'landing' %}full-width-shell{% endif %}">
     <header class="topbar">
       <div class="topbar-left">
-        <h1 class="topbar-title">SOC Security Operations Center</h1>
+        <a href="{{ url_for('landing') }}" class="brand-link-title">
+          <span class="brand-logo">🛡️</span>
+          <h1 class="topbar-title">SOC Security Operations Center</h1>
+        </a>
         <span class="system-tag">MINI SIEM ANALYTICS</span>
       </div>
       <div class="nav-actions">
@@ -83,20 +86,20 @@
     <section class="modal-card">
       <div class="modal-header">
         <div class="modal-icon">🔐</div>
-        <h2>Welcome to SOC SIEM Dashboard</h2>
-        <p>Enter your analyst details to initialize the security workstation.</p>
+        <h2>Welcome to SOC SIEM Workstation</h2>
+        <p>Enter your analyst details to launch the live interactive dashboard.</p>
       </div>
       <form id="setupForm" class="form-stack">
         <div class="form-group">
           <label for="setupUsername">Full Name / Username <span class="required">*</span></label>
-          <input id="setupUsername" type="text" placeholder="e.g. Security Analyst" required />
+          <input id="setupUsername" type="text" placeholder="Enter your name" required />
         </div>
         <div class="form-group">
           <label for="setupDob">Date of Birth</label>
           <input id="setupDob" type="date" />
         </div>
         <button type="submit" class="btn-primary btn-full glow-btn">
-          🚀 Enter Dashboard
+          🚀 Launch Dashboard
         </button>
       </form>
     </section>
