@@ -1,4 +1,8 @@
 let ipChart;
+let severityChart;
+let globalLogs = [];
+let globalAlerts = [];
+let activeSeverityFilter = "ALL";
 
 function setText(id, value) {
   const node = document.getElementById(id);
@@ -21,21 +25,22 @@ function renderAlertsTable(alerts) {
   if (!body) {
     return;
   }
-  body.innerHTML = alerts.length
-    ? alerts
+  const recentAlerts = alerts.slice(0, 5);
+  body.innerHTML = recentAlerts.length
+    ? recentAlerts
         .map(
           (alert) => `
       <tr>
         <td>${alert.time}</td>
-        <td>${alert.ip}</td>
-        <td>${alert.type}</td>
+        <td><code class="code-text">${alert.ip}</code></td>
+        <td><strong>${alert.type}</strong></td>
         <td>${alert.reason}</td>
-        <td class="severity-${alert.severity.toLowerCase()}">${alert.severity.toUpperCase()}</td>
+        <td><span class="severity-${alert.severity.toLowerCase()}">${alert.severity.toUpperCase()}</span></td>
       </tr>
     `
         )
         .join("")
-    : '<tr><td colspan="5">No alerts found</td></tr>';
+    : '<tr><td colspan="5">No threat alerts recorded</td></tr>';
 }
 
 function renderFullAlertsTable(alerts) {
@@ -43,21 +48,39 @@ function renderFullAlertsTable(alerts) {
   if (!body) {
     return;
   }
-  body.innerHTML = alerts.length
-    ? alerts
+
+  const query = document.getElementById("alertSearchInput")?.value.toLowerCase().trim() || "";
+  let filtered = alerts;
+
+  if (activeSeverityFilter !== "ALL") {
+    filtered = filtered.filter((a) => (a.severity || "").toUpperCase() === activeSeverityFilter);
+  }
+
+  if (query) {
+    filtered = filtered.filter(
+      (a) =>
+        (a.ip || "").toLowerCase().includes(query) ||
+        (a.type || "").toLowerCase().includes(query) ||
+        (a.reason || "").toLowerCase().includes(query) ||
+        (a.time || "").toLowerCase().includes(query)
+    );
+  }
+
+  body.innerHTML = filtered.length
+    ? filtered
         .map(
           (alert) => `
       <tr>
         <td>${alert.time}</td>
-        <td>${alert.ip}</td>
-        <td>${alert.type}</td>
+        <td><code class="code-text">${alert.ip}</code></td>
+        <td><strong>${alert.type}</strong></td>
         <td>${alert.reason}</td>
-        <td class="severity-${alert.severity.toLowerCase()}">${alert.severity.toUpperCase()}</td>
+        <td><span class="severity-${alert.severity.toLowerCase()}">${alert.severity.toUpperCase()}</span></td>
       </tr>
     `
         )
         .join("")
-    : '<tr><td colspan="5">No alerts found</td></tr>';
+    : '<tr><td colspan="5">No matching security alerts found</td></tr>';
 }
 
 function renderLogsTable(logs) {
@@ -65,15 +88,15 @@ function renderLogsTable(logs) {
   if (!body) {
     return;
   }
-  const recentLogs = logs.slice(-10).reverse();
+  const recentLogs = logs.slice(-5).reverse();
   body.innerHTML = recentLogs.length
     ? recentLogs
         .map(
           (log) => `
       <tr>
         <td>${log.timestamp}</td>
-        <td>${log.event}</td>
-        <td>${log.ip}</td>
+        <td><strong>${log.event}</strong></td>
+        <td><code class="code-text">${log.ip}</code></td>
       </tr>
     `
         )
@@ -86,22 +109,35 @@ function renderFullLogsTable(logs) {
   if (!body) {
     return;
   }
-  body.innerHTML = logs.length
-    ? logs
-        .slice()
-        .reverse()
+
+  const query = document.getElementById("logSearchInput")?.value.toLowerCase().trim() || "";
+  let filtered = logs.slice().reverse();
+
+  if (query) {
+    filtered = filtered.filter(
+      (l) =>
+        (l.ip || "").toLowerCase().includes(query) ||
+        (l.event || "").toLowerCase().includes(query) ||
+        (l.timestamp || "").toLowerCase().includes(query)
+    );
+  }
+
+  setText("logCountDisplay", filtered.length);
+
+  body.innerHTML = filtered.length
+    ? filtered
         .map(
           (log) => `
       <tr>
         <td>${log.timestamp}</td>
-        <td>${log.event}</td>
-        <td>${log.ip}</td>
-        <td class="severity-${(log.severity || "LOW").toLowerCase()}">${(log.severity || "LOW").toUpperCase()}</td>
+        <td><strong>${log.event}</strong></td>
+        <td><code class="code-text">${log.ip}</code></td>
+        <td><span class="severity-${(log.severity || "LOW").toLowerCase()}">${(log.severity || "LOW").toUpperCase()}</span></td>
       </tr>
     `
         )
         .join("")
-    : '<tr><td colspan="4">No log events available</td></tr>';
+    : '<tr><td colspan="4">No log events match your search query</td></tr>';
 }
 
 function renderIpChart(topAttackers) {
@@ -114,7 +150,7 @@ function renderIpChart(topAttackers) {
   const data = topAttackers.map((item) => item.failed_logins);
 
   if (typeof Chart === "undefined") {
-    setStatus("Chart library unavailable. Data tables are still live.", true);
+    setStatus("Chart engine unavailable. Data feeds active.", true);
     return;
   }
 
@@ -130,22 +166,70 @@ function renderIpChart(topAttackers) {
       labels,
       datasets: [
         {
-          label: "Failed logins",
+          label: "Failed Login Attempts",
           data,
           backgroundColor: isLight ? "#2563eb" : "#3b82f6",
           borderColor: "#1d4ed8",
           borderWidth: 1,
+          borderRadius: 4,
         },
       ],
     },
     options: {
       responsive: true,
+      maintainAspectRatio: false,
       plugins: {
-        legend: { labels: { color: isLight ? "#0f172a" : "#e2e8f0" } },
+        legend: { labels: { color: isLight ? "#0f172a" : "#e2e8f0", font: { family: "Inter" } } },
       },
       scales: {
-        x: { ticks: { color: isLight ? "#334155" : "#cbd5e1" } },
-        y: { ticks: { color: isLight ? "#334155" : "#cbd5e1" }, beginAtZero: true, precision: 0 },
+        x: { ticks: { color: isLight ? "#334155" : "#cbd5e1" }, grid: { color: isLight ? "#e2e8f0" : "#1f293d" } },
+        y: { ticks: { color: isLight ? "#334155" : "#cbd5e1" }, grid: { color: isLight ? "#e2e8f0" : "#1f293d" }, beginAtZero: true },
+      },
+    },
+  });
+}
+
+function renderSeverityChart(severityCounts) {
+  const ctx = document.getElementById("severityChart");
+  if (!ctx) {
+    return;
+  }
+
+  if (typeof Chart === "undefined") {
+    return;
+  }
+
+  if (severityChart) {
+    severityChart.destroy();
+  }
+
+  const isLight = document.body.classList.contains("light-theme");
+
+  severityChart = new Chart(ctx, {
+    type: "doughnut",
+    data: {
+      labels: ["High Severity", "Medium Severity", "Low Severity"],
+      datasets: [
+        {
+          data: [
+            severityCounts?.HIGH ?? 0,
+            severityCounts?.MEDIUM ?? 0,
+            severityCounts?.LOW ?? 0,
+          ],
+          backgroundColor: ["#ef4444", "#f59e0b", "#3b82f6"],
+          borderColor: isLight ? "#ffffff" : "#111827",
+          borderWidth: 2,
+        },
+      ],
+    },
+    options: {
+      responsive: true,
+      maintainAspectRatio: false,
+      plugins: {
+        legend: {
+          position: "bottom",
+          labels: { color: isLight ? "#0f172a" : "#e2e8f0", font: { family: "Inter" } },
+        },
       },
     },
   });
@@ -161,13 +245,15 @@ function renderTopAttackers(topAttackers) {
         .map(
           (item) => `
       <tr>
-        <td>${item.ip}</td>
-        <td>${item.failed_logins}</td>
+        <td><code class="code-text">${item.ip}</code></td>
+        <td><strong>${item.failed_logins}</strong> attempts</td>
+        <td><span class="severity-high">BRUTE_FORCE</span></td>
+        <td><span class="badge-role">BLOCKED</span></td>
       </tr>
     `
         )
         .join("")
-    : '<tr><td colspan="2">No attacking IPs detected</td></tr>';
+    : '<tr><td colspan="4">No attacking IPs detected</td></tr>';
 }
 
 async function refreshDashboard() {
@@ -179,24 +265,30 @@ async function refreshDashboard() {
     ]);
 
     if (!logsResp.ok || !alertsResp.ok || !summaryResp.ok) {
-      throw new Error("Dashboard API returned an error status.");
+      throw new Error("Dashboard API connection error.");
     }
 
     const logsData = await logsResp.json();
     const alertsData = await alertsResp.json();
     const summaryData = await summaryResp.json();
 
+    globalLogs = logsData.logs ?? [];
+    globalAlerts = alertsData.alerts ?? [];
+
     setText("totalLogs", summaryData.total_logs ?? logsData.count);
     setText("totalAlerts", summaryData.total_alerts ?? alertsData.count);
     setText("severityHigh", summaryData.severity_counts?.HIGH ?? 0);
     setText("topIp", summaryData.top_attackers?.[0]?.ip ?? "N/A");
-    renderAlertsTable(alertsData.alerts);
-    renderLogsTable(logsData.logs);
+
+    renderAlertsTable(globalAlerts);
+    renderLogsTable(globalLogs);
     renderTopAttackers(summaryData.top_attackers ?? []);
     renderIpChart(summaryData.top_attackers ?? []);
-    setStatus("Auto-refresh active (5s).");
+    renderSeverityChart(summaryData.severity_counts ?? {});
+
+    setStatus("● Telemetry Live (5s Auto-Sync)");
   } catch (error) {
-    setStatus(`Dashboard update failed: ${error.message}`, true);
+    setStatus(`SIEM Connection Failed: ${error.message}`, true);
   }
 }
 
@@ -204,13 +296,14 @@ async function refreshLogsPage() {
   try {
     const logsResp = await fetch("/api/logs");
     if (!logsResp.ok) {
-      throw new Error("Failed to load logs.");
+      throw new Error("Failed to load log feed.");
     }
     const logsData = await logsResp.json();
-    renderFullLogsTable(logsData.logs ?? []);
-    setStatus("Auto-refresh active (5s).");
+    globalLogs = logsData.logs ?? [];
+    renderFullLogsTable(globalLogs);
+    setStatus("● Log Telemetry Live (5s Auto-Sync)");
   } catch (error) {
-    setStatus(`Logs update failed: ${error.message}`, true);
+    setStatus(`Log Ingestion Error: ${error.message}`, true);
   }
 }
 
@@ -218,17 +311,40 @@ async function refreshAlertsPage() {
   try {
     const alertsResp = await fetch("/api/alerts");
     if (!alertsResp.ok) {
-      throw new Error("Failed to load alerts.");
+      throw new Error("Failed to load alert feed.");
     }
     const alertsData = await alertsResp.json();
-    renderFullAlertsTable(alertsData.alerts ?? []);
-    setStatus("Auto-refresh active (5s).");
+    globalAlerts = alertsData.alerts ?? [];
+    renderFullAlertsTable(globalAlerts);
+    setStatus("● Alert Engine Live (5s Auto-Sync)");
   } catch (error) {
-    setStatus(`Alerts update failed: ${error.message}`, true);
+    setStatus(`Alert Feed Error: ${error.message}`, true);
   }
 }
 
-// Only start polling when dashboard widgets are present.
+function bindFilterEvents() {
+  const logSearch = document.getElementById("logSearchInput");
+  if (logSearch) {
+    logSearch.addEventListener("input", () => renderFullLogsTable(globalLogs));
+  }
+
+  const alertSearch = document.getElementById("alertSearchInput");
+  if (alertSearch) {
+    alertSearch.addEventListener("input", () => renderFullAlertsTable(globalAlerts));
+  }
+
+  const filterBtns = document.querySelectorAll(".filter-btn");
+  filterBtns.forEach((btn) => {
+    btn.addEventListener("click", () => {
+      filterBtns.forEach((b) => b.classList.remove("active"));
+      btn.classList.add("active");
+      activeSeverityFilter = btn.dataset.severity;
+      renderFullAlertsTable(globalAlerts);
+    });
+  });
+}
+
+// Page Initialization
 if (document.getElementById("totalLogs")) {
   refreshDashboard();
   setInterval(refreshDashboard, 5000);
@@ -243,3 +359,5 @@ if (document.getElementById("fullAlertsTableBody")) {
   refreshAlertsPage();
   setInterval(refreshAlertsPage, 5000);
 }
+
+bindFilterEvents();

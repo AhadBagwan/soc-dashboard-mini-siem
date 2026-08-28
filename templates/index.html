@@ -1,6 +1,6 @@
 {% extends "base.html" %}
 
-{% block title %}SOC Dashboard{% endblock %}
+{% block title %}Security Overview | SOC Dashboard (Mini SIEM){% endblock %}
 
 {% block head_extra %}
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
@@ -9,82 +9,137 @@
 {% block content %}
 <section class="page-header">
   <div>
-    <h2>Security Overview</h2>
-    <p>Live monitoring for logs, alerts, and attack activity.</p>
+    <h2>Security Operations Center Overview</h2>
+    <p>Live threat telemetry, log analytics, and brute-force detection.</p>
   </div>
-  <p id="statusMessage" class="status-ok">Loading dashboard data...</p>
+  <div class="header-status">
+    <span id="statusMessage" class="status-ok">Initializing SOC Telemetry...</span>
+  </div>
 </section>
 
+<!-- Key Metrics Grid -->
 <section class="cards-grid">
-  <article class="metric-card">
-    <span class="metric-icon">📜</span>
-    <h3>Total Logs</h3>
-    <p id="totalLogs">0</p>
+  <article class="metric-card card-blue">
+    <div class="metric-header">
+      <span class="metric-icon">📜</span>
+      <span class="metric-tag">LOG STREAM</span>
+    </div>
+    <h3>Total Ingested Logs</h3>
+    <p id="totalLogs" class="metric-value">0</p>
+    <div class="metric-footer">Parsed security log lines</div>
   </article>
-  <article class="metric-card">
-    <span class="metric-icon">🚨</span>
-    <h3>Total Alerts</h3>
-    <p id="totalAlerts">0</p>
+
+  <article class="metric-card card-orange">
+    <div class="metric-header">
+      <span class="metric-icon">🚨</span>
+      <span class="metric-tag">THREAT ALERTS</span>
+    </div>
+    <h3>Total Detected Alerts</h3>
+    <p id="totalAlerts" class="metric-value">0</p>
+    <div class="metric-footer">Security incidents triggered</div>
   </article>
-  <article class="metric-card danger-card">
-    <span class="metric-icon">🔥</span>
-    <h3>High Severity Alerts</h3>
-    <p id="severityHigh">0</p>
+
+  <article class="metric-card card-red">
+    <div class="metric-header">
+      <span class="metric-icon">🔥</span>
+      <span class="metric-tag pulse-tag">HIGH SEVERITY</span>
+    </div>
+    <h3>Brute-Force Attacks</h3>
+    <p id="severityHigh" class="metric-value danger-text">0</p>
+    <div class="metric-footer">Sliding window violations</div>
   </article>
-  <article class="metric-card">
-    <span class="metric-icon">🎯</span>
-    <h3>Top IP</h3>
-    <p id="topIp">N/A</p>
+
+  <article class="metric-card card-teal">
+    <div class="metric-header">
+      <span class="metric-icon">🎯</span>
+      <span class="metric-tag">TOP THREAT IP</span>
+    </div>
+    <h3>Primary Attacker</h3>
+    <p id="topIp" class="metric-value code-text">N/A</p>
+    <div class="metric-footer">Most frequent failed attempts</div>
   </article>
 </section>
 
+<!-- Main Visualizations Grid -->
 <section class="dashboard-grid">
   <article class="panel-card">
-    <h3>Attack Distribution</h3>
-    <canvas id="ipChart"></canvas>
+    <div class="panel-header">
+      <h3>📊 Top Attacking IPs</h3>
+      <span class="panel-badge">Failed Logins</span>
+    </div>
+    <div class="chart-container">
+      <canvas id="ipChart"></canvas>
+    </div>
   </article>
 
   <article class="panel-card">
-    <h3>Top Attacking IPs</h3>
-    <table>
-      <thead>
-        <tr>
-          <th>IP</th>
-          <th>Failed Logins</th>
-        </tr>
-      </thead>
-      <tbody id="topAttackersBody"></tbody>
-    </table>
+    <div class="panel-header">
+      <h3>🍩 Alert Severity Distribution</h3>
+      <span class="panel-badge">Threat Levels</span>
+    </div>
+    <div class="chart-container">
+      <canvas id="severityChart"></canvas>
+    </div>
   </article>
 
   <article class="panel-card full-width">
-    <h3>Detected Alerts</h3>
-    <table>
-      <thead>
-        <tr>
-          <th>Time</th>
-          <th>IP</th>
-          <th>Type</th>
-          <th>Reason</th>
-          <th>Severity</th>
-        </tr>
-      </thead>
-      <tbody id="alertsTableBody"></tbody>
-    </table>
+    <div class="panel-header">
+      <h3>🎯 Top Threat Source IPs</h3>
+      <span class="panel-sub">Ranked by failed authentication count</span>
+    </div>
+    <div class="table-responsive">
+      <table>
+        <thead>
+          <tr>
+            <th>IP Address</th>
+            <th>Failed Login Attempts</th>
+            <th>Threat Category</th>
+            <th>Action Taken</th>
+          </tr>
+        </thead>
+        <tbody id="topAttackersBody"></tbody>
+      </table>
+    </div>
   </article>
 
   <article class="panel-card full-width">
-    <h3>Recent Logs</h3>
-    <table>
-      <thead>
-        <tr>
-          <th>Time</th>
-          <th>Event</th>
-          <th>IP</th>
-        </tr>
-      </thead>
-      <tbody id="logsTableBody"></tbody>
-    </table>
+    <div class="panel-header">
+      <h3>🚨 Real-Time Security Alerts</h3>
+      <a href="{{ url_for('alerts') }}" class="link-btn">View All Alerts ➔</a>
+    </div>
+    <div class="table-responsive">
+      <table>
+        <thead>
+          <tr>
+            <th>Timestamp</th>
+            <th>IP Address</th>
+            <th>Threat Type</th>
+            <th>Detection Reason</th>
+            <th>Severity</th>
+          </tr>
+        </thead>
+        <tbody id="alertsTableBody"></tbody>
+      </table>
+    </div>
+  </article>
+
+  <article class="panel-card full-width">
+    <div class="panel-header">
+      <h3>📜 Recent Ingested Log Feed</h3>
+      <a href="{{ url_for('logs') }}" class="link-btn">View All Logs ➔</a>
+    </div>
+    <div class="table-responsive">
+      <table>
+        <thead>
+          <tr>
+            <th>Timestamp</th>
+            <th>Event Type</th>
+            <th>Source IP</th>
+          </tr>
+        </thead>
+        <tbody id="logsTableBody"></tbody>
+      </table>
+    </div>
   </article>
 </section>
 {% endblock %}

@@ -1,30 +1,45 @@
 {% extends "base.html" %}
 
-{% block title %}Alerts | SOC Dashboard{% endblock %}
+{% block title %}Security Alerts | SOC Dashboard (Mini SIEM){% endblock %}
 
 {% block content %}
 <section class="page-header">
   <div>
-    <h2>Security Alerts</h2>
-    <p>Detected events with severity, source IP, and reason.</p>
+    <h2>Security Alert Log</h2>
+    <p>Correlated security incidents with severity rating, source IP, and detection logic.</p>
   </div>
-  <p id="statusMessage" class="status-ok">Loading alerts...</p>
+  <p id="statusMessage" class="status-ok">Loading alert feeds...</p>
 </section>
 
 <section class="panel-card full-width">
-  <h3>Detected Alerts</h3>
-  <table>
-    <thead>
-      <tr>
-        <th>Time</th>
-        <th>IP</th>
-        <th>Type</th>
-        <th>Reason</th>
-        <th>Severity</th>
-      </tr>
-    </thead>
-    <tbody id="fullAlertsTableBody"></tbody>
-  </table>
+  <div class="table-toolbar">
+    <div class="filter-group">
+      <button class="filter-btn active" data-severity="ALL">All Alerts</button>
+      <button class="filter-btn filter-high" data-severity="HIGH">🔥 High</button>
+      <button class="filter-btn filter-medium" data-severity="MEDIUM">⚠️ Medium</button>
+      <button class="filter-btn filter-low" data-severity="LOW">ℹ️ Low</button>
+    </div>
+
+    <div class="search-box">
+      <span class="search-icon">🔍</span>
+      <input id="alertSearchInput" type="text" placeholder="Search by IP, Type, or Detection Reason..." />
+    </div>
+  </div>
+
+  <div class="table-responsive">
+    <table>
+      <thead>
+        <tr>
+          <th>Timestamp</th>
+          <th>Source IP</th>
+          <th>Threat Type</th>
+          <th>Detection Reason</th>
+          <th>Severity Level</th>
+        </tr>
+      </thead>
+      <tbody id="fullAlertsTableBody"></tbody>
+    </table>
+  </div>
 </section>
 {% endblock %}
 

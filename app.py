@@ -68,6 +68,13 @@ def build_summary(parsed_logs, detected_alerts):
 
 
 @app.route("/")
+@app.route("/landing")
+def landing():
+    return render_template("landing.html", active_page="landing")
+
+
+@app.route("/dashboard")
+@app.route("/index")
 def index():
     return render_template("index.html", active_page="dashboard")
 
@@ -90,6 +97,7 @@ def logs():
 @app.route("/alerts")
 def alerts():
     return render_template("alerts.html", active_page="alerts")
+
 
 
 @app.route("/api/logs")

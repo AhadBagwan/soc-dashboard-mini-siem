@@ -1,0 +1,152 @@
+{% extends "base.html" %}
+
+{% block title %}SOC Dashboard (Mini SIEM) - Security Monitoring & Threat Detection{% endblock %}
+
+{% block content %}
+<div class="landing-container">
+  <!-- Hero Section -->
+  <section class="hero-section">
+    <div class="hero-badge">
+      <span class="pulse-dot"></span>
+      <span>NEXT-GEN SIEM ENGINE v2.0 • LIVE THREAT MONITORING</span>
+    </div>
+
+    <h1 class="hero-title">
+      Security Operations Center <br />
+      <span class="gradient-text">(Mini SIEM)</span> Dashboard
+    </h1>
+
+    <p class="hero-subtitle">
+      A lightweight, high-performance Security Information and Event Management (SIEM) platform designed to parse structured security logs, detect brute-force attacks via sliding window analytics, enforce IP threat intelligence, and deliver real-time severity alerting.
+    </p>
+
+    <div class="hero-actions">
+      <button id="getStartedHeroBtn" type="button" class="btn-primary btn-large glow-btn">
+        🚀 Get Started
+      </button>
+      <a href="{{ url_for('index') }}" class="btn-secondary btn-large">
+        🖥️ View Live Dashboard
+      </a>
+    </div>
+
+    <div class="hero-stats">
+      <div class="stat-pill">
+        <span class="stat-icon">⚡</span>
+        <div>
+          <strong>Sliding Window Analytics</strong>
+          <small>5 failed logins / 2 mins</small>
+        </div>
+      </div>
+      <div class="stat-pill">
+        <span class="stat-icon">🛡️</span>
+        <div>
+          <strong>Threat Intelligence</strong>
+          <small>Blacklist & Whitelist filtering</small>
+        </div>
+      </div>
+      <div class="stat-pill">
+        <span class="stat-icon">💾</span>
+        <div>
+          <strong>SQLite Audit Trail</strong>
+          <small>Persistent alert storage</small>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Features Grid -->
+  <section class="features-section">
+    <div class="section-header">
+      <h2>Core Security Capabilities</h2>
+      <p>Simulating real-world enterprise SOC log monitoring & threat detection workflows.</p>
+    </div>
+
+    <div class="features-grid">
+      <article class="feature-card">
+        <div class="feature-icon-wrapper red-glow">🔍</div>
+        <h3>Structured Log Parsing</h3>
+        <p>Regex-based ingestion engine parsing timestamp, event type, and IP metadata from raw system authentication logs in real time.</p>
+      </article>
+
+      <article class="feature-card">
+        <div class="feature-icon-wrapper orange-glow">🚨</div>
+        <h3>Sliding-Window Attack Detection</h3>
+        <p>Automated detection algorithm flagging high-frequency brute-force attempts with dynamic queue-based time windows.</p>
+      </article>
+
+      <article class="feature-card">
+        <div class="feature-icon-wrapper blue-glow">⚠️</div>
+        <h3>Threat Intelligence & Blacklist</h3>
+        <p>Automatic correlation against static threat intelligence blacklists to catch suspicious malicious actors instantly.</p>
+      </article>
+
+      <article class="feature-card">
+        <div class="feature-icon-wrapper green-glow">🛡️</div>
+        <h3>Whitelist Suppression</h3>
+        <p>False-positive reduction logic suppressing alerts for verified internal IP ranges (e.g. 127.0.0.1, 192.168.x.x).</p>
+      </article>
+
+      <article class="feature-card">
+        <div class="feature-icon-wrapper purple-glow">📊</div>
+        <h3>Severity Classification</h3>
+        <p>Categorized alert outputs (CRITICAL, HIGH, MEDIUM, LOW) enabling fast triage for security operations analysts.</p>
+      </article>
+
+      <article class="feature-card">
+        <div class="feature-icon-wrapper teal-glow">🌐</div>
+        <h3>RESTful Analytics API</h3>
+        <p>Structured endpoints (/api/logs, /api/alerts, /api/summary) designed for SIEM dashboard consumption & automated reporting.</p>
+      </article>
+    </div>
+  </section>
+
+  <!-- How It Works Workflow -->
+  <section class="workflow-section">
+    <div class="section-header">
+      <h2>How the SIEM Pipeline Works</h2>
+      <p>End-to-end data processing workflow from raw logs to actionable alerts.</p>
+    </div>
+
+    <div class="workflow-steps">
+      <div class="step-card">
+        <div class="step-number">01</div>
+        <h4>Log Ingestion</h4>
+        <p>Ingests system logs from structured file formats.</p>
+      </div>
+      <div class="step-arrow">➔</div>
+      <div class="step-card">
+        <div class="step-number">02</div>
+        <h4>Pattern Analysis</h4>
+        <p>Evaluates sliding window thresholds & threat lists.</p>
+      </div>
+      <div class="step-arrow">➔</div>
+      <div class="step-card">
+        <div class="step-number">03</div>
+        <h4>Database Storage</h4>
+        <p>Persists verified security alerts into SQLite & JSON.</p>
+      </div>
+      <div class="step-arrow">➔</div>
+      <div class="step-card">
+        <div class="step-number">04</div>
+        <h4>SOC Visualization</h4>
+        <p>Renders real-time telemetry on the Interactive Dashboard.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- Bottom CTA Banner -->
+  <section class="cta-banner">
+    <div class="cta-content">
+      <h2>Ready to Explore Security Operations?</h2>
+      <p>Set up your analyst profile to access the live SOC Monitoring Dashboard.</p>
+      <button id="getStartedCtaBtn" type="button" class="btn-primary btn-large glow-btn">
+        🚀 Launch Dashboard Setup
+      </button>
+    </div>
+  </section>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script src="{{ url_for('static', filename='theme.js') }}"></script>
+{% endblock %}

@@ -1,29 +1,40 @@
 {% extends "base.html" %}
 
-{% block title %}Logs | SOC Dashboard{% endblock %}
+{% block title %}Log Events | SOC Dashboard (Mini SIEM){% endblock %}
 
 {% block content %}
 <section class="page-header">
   <div>
-    <h2>Log Events</h2>
-    <p>All parsed log entries from the SOC monitor.</p>
+    <h2>Parsed Log Stream</h2>
+    <p>Real-time security authentication events ingested by the SIEM engine.</p>
   </div>
-  <p id="statusMessage" class="status-ok">Loading logs...</p>
+  <p id="statusMessage" class="status-ok">Loading log telemetry...</p>
 </section>
 
 <section class="panel-card full-width">
-  <h3>Recent Activity</h3>
-  <table>
-    <thead>
-      <tr>
-        <th>Time</th>
-        <th>Event</th>
-        <th>IP</th>
-        <th>Severity</th>
-      </tr>
-    </thead>
-    <tbody id="fullLogsTableBody"></tbody>
-  </table>
+  <div class="table-toolbar">
+    <div class="search-box">
+      <span class="search-icon">🔍</span>
+      <input id="logSearchInput" type="text" placeholder="Search by IP, Event type, or Timestamp..." />
+    </div>
+    <div class="toolbar-stats">
+      Showing <span id="logCountDisplay">0</span> events
+    </div>
+  </div>
+
+  <div class="table-responsive">
+    <table>
+      <thead>
+        <tr>
+          <th>Timestamp</th>
+          <th>Event Type</th>
+          <th>Source IP</th>
+          <th>Initial Severity</th>
+        </tr>
+      </thead>
+      <tbody id="fullLogsTableBody"></tbody>
+    </table>
+  </div>
 </section>
 {% endblock %}
 

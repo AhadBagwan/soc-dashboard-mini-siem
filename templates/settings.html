@@ -1,21 +1,25 @@
 {% extends "base.html" %}
 
-{% block title %}Settings | SOC Dashboard{% endblock %}
+{% block title %}SIEM Settings | SOC Dashboard{% endblock %}
 
 {% block content %}
 <section class="page-header">
   <div>
-    <h2>Detection Settings</h2>
-    <p>UI controls for SOC detection behavior (no backend persistence).</p>
+    <h2>SIEM Threat Engine Settings</h2>
+    <p>Configure detection rules, threshold parameters, and notification behavior.</p>
   </div>
 </section>
 
 <section class="panel-card settings-card">
+  <div class="panel-header">
+    <h3>⚙️ Detection Rule Configuration</h3>
+  </div>
+
   <form class="form-stack">
     <div class="setting-row">
       <div>
-        <h3>Enable brute-force detection</h3>
-        <p>Monitor repeated failed logins in a short time window.</p>
+        <h3>Sliding-Window Brute-Force Detection</h3>
+        <p>Flag IPs executing 5+ failed login attempts within a 2-minute sliding window.</p>
       </div>
       <label class="switch">
         <input type="checkbox" checked />
@@ -25,8 +29,19 @@
 
     <div class="setting-row">
       <div>
-        <h3>Enable blacklist</h3>
-        <p>Generate alerts for known suspicious IP addresses.</p>
+        <h3>Threat Intelligence Blacklist Correlation</h3>
+        <p>Raise immediate MEDIUM severity alerts when blacklisted IPs interact with the system.</p>
+      </div>
+      <label class="switch">
+        <input type="checkbox" checked />
+        <span class="slider"></span>
+      </label>
+    </div>
+
+    <div class="setting-row">
+      <div>
+        <h3>Internal Whitelist Filtering</h3>
+        <p>Automatically suppress brute-force alerts for internal range IPs (127.0.0.1, 192.168.x.x).</p>
       </div>
       <label class="switch">
         <input type="checkbox" checked />
@@ -35,11 +50,18 @@
     </div>
 
     <div class="setting-input">
-      <label for="threshold">Failed login threshold</label>
-      <input id="threshold" name="threshold" type="number" min="1" value="5" />
+      <label for="threshold">Failed Login Attempts Threshold</label>
+      <input id="threshold" name="threshold" type="number" min="1" max="20" value="5" />
     </div>
 
-    <button type="button" class="btn-primary">Save Settings</button>
+    <div class="setting-input">
+      <label for="window">Time Window (Minutes)</label>
+      <input id="window" name="window" type="number" min="1" max="60" value="2" />
+    </div>
+
+    <div class="form-actions">
+      <button type="button" class="btn-primary glow-btn">Save SIEM Preferences</button>
+    </div>
   </form>
 </section>
 {% endblock %}

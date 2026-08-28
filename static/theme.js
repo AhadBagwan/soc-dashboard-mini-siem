@@ -36,7 +36,7 @@ function renderProfileInfo() {
   const dobNode = document.getElementById("userDobDisplay");
 
   if (nameNode) {
-    nameNode.textContent = name || "User";
+    nameNode.textContent = name || "Analyst";
   }
   if (dobNode) {
     dobNode.textContent = dob || "Not set";
@@ -65,6 +65,31 @@ function toggleSetupOverlay(show) {
   document.body.classList.toggle("modal-open", show);
 }
 
+function bindGetStartedButtons() {
+  const heroBtn = document.getElementById("getStartedHeroBtn");
+  const ctaBtn = document.getElementById("getStartedCtaBtn");
+
+  const openModal = () => {
+    const { name, dob } = getProfile();
+    const setupNameInput = document.getElementById("setupUsername");
+    const setupDobInput = document.getElementById("setupDob");
+    if (setupNameInput && name) {
+      setupNameInput.value = name;
+    }
+    if (setupDobInput && dob) {
+      setupDobInput.value = dob;
+    }
+    toggleSetupOverlay(true);
+  };
+
+  if (heroBtn) {
+    heroBtn.addEventListener("click", openModal);
+  }
+  if (ctaBtn) {
+    ctaBtn.addEventListener("click", openModal);
+  }
+}
+
 function bindSetupForm() {
   const setupForm = document.getElementById("setupForm");
   if (!setupForm) {
@@ -81,36 +106,8 @@ function bindSetupForm() {
     saveProfile(username, dob);
     renderProfileInfo();
     toggleSetupOverlay(false);
-    window.location.href = "/";
-  });
-}
-
-function ensureFirstTimeSetup() {
-  const requiresSetup = document.body.dataset.requiresSetup === "true";
-  if (!requiresSetup) {
-    return;
-  }
-  const { name } = getProfile();
-  if (!name) {
-    toggleSetupOverlay(true);
-  }
-}
-
-function bindLoginForm() {
-  const loginForm = document.getElementById("loginForm");
-  if (!loginForm) {
-    return;
-  }
-
-  loginForm.addEventListener("submit", (event) => {
-    event.preventDefault();
-    const username = document.getElementById("username")?.value.trim();
-    const dob = document.getElementById("dob")?.value || "";
-    if (!username) {
-      return;
-    }
-    saveProfile(username, dob);
-    window.location.href = "/";
+    // Redirect to enhanced dashboard after entering profile
+    window.location.href = "/dashboard";
   });
 }
 
@@ -190,12 +187,11 @@ function bindProfileModal() {
   }
 }
 
-// Initialize theme and user profile UI for every page.
+// Global UI Initialization
 applyTheme(getStoredTheme());
 renderProfileInfo();
 bindThemeToggle();
+bindGetStartedButtons();
 bindSetupForm();
-ensureFirstTimeSetup();
-bindLoginForm();
 bindUserMenu();
 bindProfileModal();
