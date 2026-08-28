@@ -1,3 +1,5 @@
+import os
+import tempfile
 from pathlib import Path
 
 from flask import Flask, jsonify, render_template
@@ -8,10 +10,27 @@ from analyzer.log_analyzer import analyze_logs, is_whitelisted_ip
 
 BASE_DIR = Path(__file__).resolve().parent
 LOG_FILE = BASE_DIR / "logs" / "sample.log"
-ALERTS_FILE = BASE_DIR / "data" / "alerts.json"
-ALERTS_DB_FILE = BASE_DIR / "data" / "alerts.db"
+
+
+def get_storage_paths():
+    """Return storage paths, falling back to OS temp dir for read-only environments (e.g. Vercel)."""
+    default_dir = BASE_DIR / "data"
+    try:
+        default_dir.mkdir(parents=True, exist_ok=True)
+        test_file = default_dir / ".write_test"
+        test_file.touch()
+        test_file.unlink()
+        return default_dir / "alerts.json", default_dir / "alerts.db"
+    except Exception:
+        tmp_dir = Path(tempfile.gettempdir()) / "soc_dashboard_data"
+        tmp_dir.mkdir(parents=True, exist_ok=True)
+        return tmp_dir / "alerts.json", tmp_dir / "alerts.db"
+
+
+ALERTS_FILE, ALERTS_DB_FILE = get_storage_paths()
 
 app = Flask(__name__)
+
 
 
 def refresh_analysis():

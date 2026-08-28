@@ -12,8 +12,12 @@ def _reason_from_type(alert_type: str) -> str:
 
 
 def _connect(db_file: Path):
-    db_file.parent.mkdir(parents=True, exist_ok=True)
+    try:
+        db_file.parent.mkdir(parents=True, exist_ok=True)
+    except Exception:
+        pass
     return sqlite3.connect(db_file)
+
 
 
 def init_db(db_file: Path):
