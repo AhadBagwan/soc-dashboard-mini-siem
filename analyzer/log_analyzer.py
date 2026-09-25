@@ -96,6 +96,7 @@ def detect_alerts(parsed_logs):
                     "type": "BRUTE_FORCE",
                     "reason": f"Brute-force pattern: {len(queue)} failed logins within {WINDOW_MINUTES} minutes",
                     "severity": "HIGH",
+                    "mitre": "T1110 (Brute Force)",
                 }
             )
 
@@ -115,6 +116,7 @@ def detect_alerts(parsed_logs):
                 "type": "SUSPICIOUS_IP",
                 "reason": "Suspicious IP address detected",
                 "severity": "MEDIUM",
+                "mitre": "T1590 (Gather Victim Network Info)",
             }
         )
 
@@ -135,6 +137,7 @@ def detect_alerts(parsed_logs):
                 "type": "NORMAL_ACTIVITY",
                 "reason": "Normal login behavior observed",
                 "severity": "LOW",
+                "mitre": "N/A",
             }
         )
 
@@ -145,6 +148,45 @@ def detect_alerts(parsed_logs):
         reverse=True,
     )
     return alerts
+
+
+def generate_incident_report(parsed_logs, detected_alerts):
+    """Generate a formal Incident Report for detected brute-force & threat activities."""
+    brute_force_alerts = [a for a in detected_alerts if a.get("type") == "BRUTE_FORCE"]
+    suspicious_alerts = [a for a in detected_alerts if a.get("type") == "SUSPICIOUS_IP"]
+
+    primary_attacker = brute_force_alerts[0]["ip"] if brute_force_alerts else (
+        suspicious_alerts[0]["ip"] if suspicious_alerts else "None Identified"
+    )
+
+    return {
+        "title": "SSH Authentication Brute-Force Incident Report",
+        "incident_id": "INC-2026-SSH-001",
+        "timestamp": datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
+        "severity": "HIGH" if brute_force_alerts else ("MEDIUM" if suspicious_alerts else "LOW"),
+        "target_service": "SSH Authentication Server",
+        "primary_attacker_ip": primary_attacker,
+        "mitre_attack": {
+            "tactic": "Credential Access (TA0006)",
+            "technique": "Brute Force (T1110)",
+            "sub_technique": "Password Guessing (T1110.001)",
+        },
+        "summary": f"Detected high-velocity authentication failure pattern originating from {primary_attacker}. "
+                   f"The event exceeded the detection threshold of {FAILED_LOGIN_THRESHOLD} failed logins within a {WINDOW_MINUTES}-minute sliding window.",
+        "findings": {
+            "total_logs_analyzed": len(parsed_logs),
+            "total_threat_alerts": len(detected_alerts),
+            "brute_force_incidents": len(brute_force_alerts),
+            "blacklisted_ip_detections": len(suspicious_alerts),
+        },
+        "remediation_recommendations": [
+            f"Immediately block IP {primary_attacker} at the edge firewall or via fail2ban / iptables rules.",
+            "Enforce SSH key-based authentication and disable password authentication in sshd_config.",
+            "Implement rate-limiting on port 22 and configure MFA for shell access.",
+            "Conduct credential rotation for all accounts targeted during the attack window.",
+        ],
+    }
+
 
 
 def write_alerts(alerts, alerts_file: Path):

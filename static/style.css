@@ -1117,13 +1117,161 @@ input:checked + .slider:before {
 }
 
 /* Responsive adjustments */
-@media (max-width: 900px) {
-  .sidebar { width: 70px; padding: 1rem 0.5rem; }
-  .brand-text, .nav-link span:not(.nav-icon), .sidebar-footer { display: none; }
-  .app-shell { margin-left: 70px; }
-  .dashboard-grid { grid-template-columns: 1fr; }
-  .panel-card.full-width { grid-column: span 1; }
-  .hero-title { font-size: 2.2rem; }
-  .workflow-steps { flex-direction: column; }
-  .step-arrow { transform: rotate(90deg); }
+/* Incident Report Styles */
+.report-container {
+  max-width: 900px;
+  margin: 0 auto;
+  padding: 2.5rem;
 }
+
+.report-header-banner {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 1.5rem;
+  margin-bottom: 1.5rem;
+}
+
+.report-badge {
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  font-weight: 800;
+  padding: 0.25rem 0.65rem;
+  border-radius: 4px;
+  letter-spacing: 0.05em;
+  display: inline-block;
+  margin-bottom: 0.5rem;
+}
+
+.danger-bg {
+  background: var(--accent-red-glow);
+  color: var(--accent-red);
+}
+
+.report-header-banner h1 {
+  font-size: 1.75rem;
+  font-weight: 800;
+}
+
+.report-meta {
+  color: var(--text-muted);
+  font-size: 0.85rem;
+  margin-top: 0.25rem;
+}
+
+.report-severity-box {
+  text-align: right;
+  background: var(--surface-card);
+  padding: 0.75rem 1.25rem;
+  border-radius: var(--radius-md);
+  border: 1px solid var(--border-color);
+}
+
+.severity-label {
+  display: block;
+  font-family: var(--font-mono);
+  font-size: 0.65rem;
+  color: var(--text-muted);
+  margin-bottom: 0.25rem;
+}
+
+.divider {
+  border: none;
+  border-top: 1px solid var(--border-color);
+  margin: 1.5rem 0;
+}
+
+.report-section {
+  margin-bottom: 2rem;
+}
+
+.report-section h3 {
+  font-size: 1.15rem;
+  font-weight: 700;
+  margin-bottom: 1rem;
+  color: var(--text-primary);
+}
+
+.report-text {
+  color: var(--text-secondary);
+  line-height: 1.7;
+  font-size: 0.95rem;
+}
+
+.report-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 1rem;
+  margin-bottom: 2rem;
+}
+
+.info-card {
+  background: var(--surface-card);
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-sm);
+  padding: 1rem;
+}
+
+.info-title {
+  font-family: var(--font-mono);
+  font-size: 0.7rem;
+  color: var(--text-muted);
+  display: block;
+  margin-bottom: 0.4rem;
+  text-transform: uppercase;
+}
+
+.info-value {
+  font-size: 1.05rem;
+  font-weight: 700;
+}
+
+.mitre-box {
+  background: rgba(59, 130, 246, 0.05);
+  border: 1px solid var(--accent-blue-glow);
+  border-radius: var(--radius-md);
+  padding: 1.5rem;
+}
+
+.mitre-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 1rem;
+  margin-top: 0.75rem;
+}
+
+.mitre-card {
+  background: var(--surface-color);
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-sm);
+  padding: 1rem;
+}
+
+.mitre-label {
+  display: block;
+  font-family: var(--font-mono);
+  font-size: 0.65rem;
+  color: var(--accent-blue);
+  font-weight: 700;
+  margin-bottom: 0.3rem;
+}
+
+.remediation-list {
+  padding-left: 1.25rem;
+  color: var(--text-secondary);
+  line-height: 1.8;
+  font-size: 0.95rem;
+}
+
+.remediation-list li {
+  margin-bottom: 0.5rem;
+}
+
+@media print {
+  .sidebar, .topbar, .page-header, .header-actions { display: none !important; }
+  .app-shell { margin-left: 0 !important; }
+  body { background: #ffffff !important; color: #000000 !important; }
+  .report-container { border: none !important; box-shadow: none !important; padding: 0 !important; }
+  .info-card, .mitre-card, .report-severity-box { background: #f8fafc !important; border: 1px solid #cbd5e1 !important; color: #000 !important; }
+}
+

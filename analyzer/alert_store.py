@@ -52,6 +52,15 @@ def save_alerts_to_db(alerts, db_file: Path):
         conn.commit()
 
 
+def _mitre_from_type(alert_type: str) -> str:
+    mapping = {
+        "BRUTE_FORCE": "T1110 (Brute Force)",
+        "SUSPICIOUS_IP": "T1590 (Gather Victim Network Info)",
+        "NORMAL_ACTIVITY": "N/A",
+    }
+    return mapping.get(alert_type, "N/A")
+
+
 def read_alerts_from_db(db_file: Path):
     """Read current alert set ordered by latest timestamp."""
     init_db(db_file)
@@ -71,6 +80,8 @@ def read_alerts_from_db(db_file: Path):
             "type": row[3],
             "severity": row[4],
             "reason": _reason_from_type(row[3]),
+            "mitre": _mitre_from_type(row[3]),
         }
         for row in rows
     ]
+

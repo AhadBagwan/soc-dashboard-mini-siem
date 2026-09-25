@@ -31,9 +31,13 @@
       <a href="{{ url_for('alerts') }}" class="nav-link {% if active_page == 'alerts' %}active{% endif %}">
         <span class="nav-icon">🚨</span> Threat Alerts
       </a>
+      <a href="{{ url_for('report') }}" class="nav-link {% if active_page == 'report' %}active{% endif %}">
+        <span class="nav-icon">📄</span> Incident Report
+      </a>
       <a href="{{ url_for('settings') }}" class="nav-link {% if active_page == 'settings' %}active{% endif %}">
         <span class="nav-icon">⚙️</span> Settings
       </a>
+
     </nav>
 
     <div class="sidebar-footer">

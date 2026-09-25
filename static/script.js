@@ -61,6 +61,7 @@ function renderFullAlertsTable(alerts) {
       (a) =>
         (a.ip || "").toLowerCase().includes(query) ||
         (a.type || "").toLowerCase().includes(query) ||
+        (a.mitre || "").toLowerCase().includes(query) ||
         (a.reason || "").toLowerCase().includes(query) ||
         (a.time || "").toLowerCase().includes(query)
     );
@@ -74,14 +75,16 @@ function renderFullAlertsTable(alerts) {
         <td>${alert.time}</td>
         <td><code class="code-text">${alert.ip}</code></td>
         <td><strong>${alert.type}</strong></td>
+        <td><span class="system-tag">${alert.mitre || "N/A"}</span></td>
         <td>${alert.reason}</td>
         <td><span class="severity-${alert.severity.toLowerCase()}">${alert.severity.toUpperCase()}</span></td>
       </tr>
     `
         )
         .join("")
-    : '<tr><td colspan="5">No matching security alerts found</td></tr>';
+    : '<tr><td colspan="6">No matching security alerts found</td></tr>';
 }
+
 
 function renderLogsTable(logs) {
   const body = document.getElementById("logsTableBody");

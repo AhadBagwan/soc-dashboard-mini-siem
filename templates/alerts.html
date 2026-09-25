@@ -6,9 +6,11 @@
 <section class="page-header">
   <div>
     <h2>Security Alert Log</h2>
-    <p>Correlated security incidents with severity rating, source IP, and detection logic.</p>
+    <p>Correlated security incidents mapped to MITRE ATT&CK framework with severity rating and detection logic.</p>
   </div>
-  <p id="statusMessage" class="status-ok">Loading alert feeds...</p>
+  <div class="header-actions">
+    <a href="{{ url_for('report') }}" class="btn-primary glow-btn">📄 View Incident Report</a>
+  </div>
 </section>
 
 <section class="panel-card full-width">
@@ -22,7 +24,7 @@
 
     <div class="search-box">
       <span class="search-icon">🔍</span>
-      <input id="alertSearchInput" type="text" placeholder="Search by IP, Type, or Detection Reason..." />
+      <input id="alertSearchInput" type="text" placeholder="Search by IP, Type, MITRE, or Reason..." />
     </div>
   </div>
 
@@ -33,6 +35,7 @@
           <th>Timestamp</th>
           <th>Source IP</th>
           <th>Threat Type</th>
+          <th>MITRE ATT&CK</th>
           <th>Detection Reason</th>
           <th>Severity Level</th>
         </tr>
@@ -41,6 +44,7 @@
     </table>
   </div>
 </section>
+
 {% endblock %}
 
 {% block scripts %}

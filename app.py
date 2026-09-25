@@ -5,7 +5,8 @@ from pathlib import Path
 from flask import Flask, jsonify, render_template
 
 from analyzer.alert_store import read_alerts_from_db
-from analyzer.log_analyzer import analyze_logs, is_whitelisted_ip
+from analyzer.log_analyzer import analyze_logs, generate_incident_report, is_whitelisted_ip
+
 
 
 BASE_DIR = Path(__file__).resolve().parent
@@ -99,6 +100,10 @@ def alerts():
     return render_template("alerts.html", active_page="alerts")
 
 
+@app.route("/report")
+def report():
+    return render_template("report.html", active_page="report")
+
 
 @app.route("/api/logs")
 def api_logs():
@@ -124,6 +129,13 @@ def api_alerts():
 def summary():
     parsed_logs, detected_alerts = refresh_analysis()
     return jsonify(build_summary(parsed_logs, detected_alerts))
+
+
+@app.route("/api/incident-report")
+def api_incident_report():
+    parsed_logs, detected_alerts = refresh_analysis()
+    return jsonify(generate_incident_report(parsed_logs, detected_alerts))
+
 
 
 if __name__ == "__main__":

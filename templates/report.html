@@ -1,0 +1,158 @@
+{% extends "base.html" %}
+
+{% block title %}Incident Report | SOC Dashboard (Mini SIEM){% endblock %}
+
+{% block content %}
+<section class="page-header">
+  <div>
+    <h2>Security Incident Report</h2>
+    <p>Automated forensic analysis report for detected authentication threats.</p>
+  </div>
+  <div class="header-actions">
+    <button onclick="window.print()" class="btn-primary glow-btn" type="button">🖨️ Print / Export Report</button>
+  </div>
+</section>
+
+<div class="report-container panel-card">
+  <div class="report-header-banner">
+    <div>
+      <span class="report-badge danger-bg">INCIDENT REPORT</span>
+      <h1 id="reportTitle">SSH Authentication Brute-Force Incident Report</h1>
+      <p class="report-meta">Incident ID: <strong id="reportId">INC-2026-SSH-001</strong> | Generated: <span id="reportTime">Loading...</span></p>
+    </div>
+    <div class="report-severity-box">
+      <span class="severity-label">SEVERITY LEVEL</span>
+      <span id="reportSeverity" class="severity-high">HIGH</span>
+    </div>
+  </div>
+
+  <hr class="divider" />
+
+  <!-- Executive Summary -->
+  <section class="report-section">
+    <h3>1. Executive Summary</h3>
+    <p id="reportSummary" class="report-text">
+      Loading forensic incident summary...
+    </p>
+  </section>
+
+  <!-- Key Incident Metadata Grid -->
+  <section class="report-grid">
+    <div class="info-card">
+      <span class="info-title">Primary Attacker IP</span>
+      <p id="reportAttackerIp" class="info-value code-text">Loading...</p>
+    </div>
+    <div class="info-card">
+      <span class="info-title">Target Service</span>
+      <p id="reportTargetService" class="info-value">SSH Authentication</p>
+    </div>
+    <div class="info-card">
+      <span class="info-title">Detection Method</span>
+      <p class="info-value">Sliding Window (5 attempts / 2 min)</p>
+    </div>
+  </section>
+
+  <!-- MITRE ATT&CK Mapping Card -->
+  <section class="report-section mitre-box">
+    <h3>2. MITRE ATT&CK Framework Mapping</h3>
+    <div class="mitre-grid">
+      <div class="mitre-card">
+        <span class="mitre-label">TACTIC</span>
+        <strong id="mitreTactic">Credential Access (TA0006)</strong>
+      </div>
+      <div class="mitre-card">
+        <span class="mitre-label">TECHNIQUE</span>
+        <strong id="mitreTechnique">Brute Force (T1110)</strong>
+      </div>
+      <div class="mitre-card">
+        <span class="mitre-label">SUB-TECHNIQUE</span>
+        <strong id="mitreSubTechnique">Password Guessing (T1110.001)</strong>
+      </div>
+    </div>
+  </section>
+
+  <!-- Technical Findings -->
+  <section class="report-section">
+    <h3>3. Technical Investigation Findings</h3>
+    <div class="table-responsive">
+      <table>
+        <thead>
+          <tr>
+            <th>Telemetry Metric</th>
+            <th>Observed Value</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>Total Security Logs Ingested</td>
+            <td id="findTotalLogs">0</td>
+          </tr>
+          <tr>
+            <td>Total Security Alerts Triggered</td>
+            <td id="findTotalAlerts">0</td>
+          </tr>
+          <tr>
+            <td>Brute Force Attack Incidents</td>
+            <td id="findBruteForce">0</td>
+          </tr>
+          <tr>
+            <td>Blacklisted IP Detections</td>
+            <td id="findBlacklist">0</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <!-- Remediation Plan -->
+  <section class="report-section">
+    <h3>4. Recommended Remediation & Countermeasures</h3>
+    <ul id="reportRemediation" class="remediation-list">
+      <li>Loading remediation recommendations...</li>
+    </ul>
+  </section>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+async function loadIncidentReport() {
+  try {
+    const res = await fetch("/api/incident-report");
+    if (!res.ok) throw new Error("Failed to fetch incident report.");
+    const data = await res.json();
+
+    document.getElementById("reportTitle").textContent = data.title || "Incident Report";
+    document.getElementById("reportId").textContent = data.incident_id || "INC-001";
+    document.getElementById("reportTime").textContent = data.timestamp || "N/A";
+    document.getElementById("reportSeverity").textContent = (data.severity || "HIGH").toUpperCase();
+    document.getElementById("reportSeverity").className = `severity-${(data.severity || "HIGH").toLowerCase()}`;
+    document.getElementById("reportSummary").textContent = data.summary || "";
+    document.getElementById("reportAttackerIp").textContent = data.primary_attacker_ip || "N/A";
+    document.getElementById("reportTargetService").textContent = data.target_service || "SSH Server";
+
+    if (data.mitre_attack) {
+      document.getElementById("mitreTactic").textContent = data.mitre_attack.tactic;
+      document.getElementById("mitreTechnique").textContent = data.mitre_attack.technique;
+      document.getElementById("mitreSubTechnique").textContent = data.mitre_attack.sub_technique;
+    }
+
+    if (data.findings) {
+      document.getElementById("findTotalLogs").textContent = data.findings.total_logs_analyzed;
+      document.getElementById("findTotalAlerts").textContent = data.findings.total_threat_alerts;
+      document.getElementById("findBruteForce").textContent = data.findings.brute_force_incidents;
+      document.getElementById("findBlacklist").textContent = data.findings.blacklisted_ip_detections;
+    }
+
+    if (data.remediation_recommendations) {
+      const listNode = document.getElementById("reportRemediation");
+      listNode.innerHTML = data.remediation_recommendations.map(r => `<li>${r}</li>`).join("");
+    }
+  } catch (err) {
+    console.error("Report load error:", err);
+  }
+}
+
+document.addEventListener("DOMContentLoaded", loadIncidentReport);
+</script>
+{% endblock %}
